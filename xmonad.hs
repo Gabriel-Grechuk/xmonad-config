@@ -29,17 +29,29 @@ import XMonad.Layout.NoBorders (noBorders, smartBorders)
 
 import XMonad.Util.EZConfig
 
+-------------------------------------------------------------------------------
+--  Definições para o sistema.
+--
+
+mainTerminal            = "alacritty"
+mainNormalBorderColor   = "#DDDDDD"
+mainFocusedBorderColor  = "FF0000"
+mainWorkspaces          = ["1:terminal", "2:web", "3:code", "4:video", "6:image", "7:game", "8:steam", "9:music"]
+
+
 --------------------------------------------------------------------------------
 main = do
   xmonad  $ ewmh desktopConfig
-    { modMask            = mod1Mask 
-    , manageHook         = myManageHook <+> manageHook desktopConfig
-    , layoutHook         = smartBorders $ desktopLayoutModifiers $ myLayouts
+    { 
+    workspaces           = mainWorkspaces
+    , modMask            = mod1Mask 
+    , manageHook         = mainManageHook <+> manageHook desktopConfig
+    , layoutHook         = smartBorders $ desktopLayoutModifiers $ mainLayouts
     , logHook            = dynamicLogString def >>= xmonadPropLog
     , handleEventHook    = handleEventHook def <+> fullscreenEventHook 
-    , terminal           = "alacritty"
-    , normalBorderColor  = "#dddddd" 
-    , focusedBorderColor = "#ff0000"  
+    , terminal           = mainTerminal
+    , normalBorderColor  = mainNormalBorderColor 
+    , focusedBorderColor = mainFocusedBorderColor
     }
 
 
@@ -48,7 +60,8 @@ main = do
 
 
 
-myLayouts = noBorders tiled ||| noBorders (Mirror tiled) ||| noBorders Full ||| noBorders Circle ||| noBorders Grid
+-------------------------------------------------------------------------------
+mainLayouts = noBorders tiled ||| noBorders (Mirror tiled) ||| noBorders Full ||| noBorders Circle ||| noBorders Grid
   where
      tiled   = Tall nmaster delta ratio 
      nmaster = 1
@@ -57,7 +70,8 @@ myLayouts = noBorders tiled ||| noBorders (Mirror tiled) ||| noBorders Full ||| 
 
 
 
-myManageHook = composeAll
+-------------------------------------------------------------------------------
+mainManageHook = composeAll
     [ className =? "Gimp"           --> doFloat
     , (className =? "Firefox" <&&> resource =? "Dialog") --> doFloat
     , className =? "Cairo-dock"     --> doIgnore
