@@ -8,8 +8,6 @@
 
 module Main (main) where
 
-
-
 import System.Exit
 
 import XMonad
@@ -28,30 +26,51 @@ import XMonad.Layout.DecorationMadness
 import XMonad.Layout.NoBorders (noBorders, smartBorders)
 
 import XMonad.Util.EZConfig
+import XMonad.Util.SpawnOnce
 
 -------------------------------------------------------------------------------
 --  Definições para o sistema.
 --
 
-mainTerminal            = "alacritty"
-mainNormalBorderColor   = "#DDDDDD"
-mainFocusedBorderColor  = "FF0000"
-mainWorkspaces          = ["1:terminal", "2:web", "3:code", "4:video", "6:image", "7:game", "8:steam", "9:music"]
+myTerminal :: String
+myTerminal = "alacritty"
+
+myNormalBorderColor :: String
+myNormalBorderColor = "#c9b8f3"
+
+myFocusedBorderColor :: String
+myFocusedBorderColor = "#9e4af3"
+
+myBorderWidth :: Dimension
+myBorderWidth = 2
+
+myModMask :: KeyMask
+myModMask = mod1Mask
+
+myWorkspaces = ["1:Terminal", "2:Web", "3:Vim", "4:Images", "5:Video", "6:Books", "7:Research", "8:Music", "9:Games"]
 
 
+
+
+myStartupHook :: X ()
+myStartupHook = do
+          spawnOnce "picom --experimental-backends &"
+          spawnOnce "nitrogen --restore "
+          
 --------------------------------------------------------------------------------
 main = do
   xmonad  $ ewmh desktopConfig
-    { 
-    workspaces           = mainWorkspaces
-    , modMask            = mod1Mask 
-    , manageHook         = mainManageHook <+> manageHook desktopConfig
-    , layoutHook         = smartBorders $ desktopLayoutModifiers $ mainLayouts
+    {
+      startupHook        = myStartupHook
+    , workspaces         = myWorkspaces
+    , modMask            = myModMask
+    , manageHook         = myManageHook <+> manageHook desktopConfig
+    , layoutHook         = smartBorders $ desktopLayoutModifiers $ myLayouts
     , logHook            = dynamicLogString def >>= xmonadPropLog
     , handleEventHook    = handleEventHook def <+> fullscreenEventHook 
-    , terminal           = mainTerminal
-    , normalBorderColor  = mainNormalBorderColor 
-    , focusedBorderColor = mainFocusedBorderColor
+    , terminal           = myTerminal
+    , normalBorderColor  = myNormalBorderColor 
+    , focusedBorderColor = myFocusedBorderColor
     }
 
 
@@ -61,7 +80,7 @@ main = do
 
 
 -------------------------------------------------------------------------------
-mainLayouts = noBorders tiled ||| noBorders (Mirror tiled) ||| noBorders Full ||| noBorders Circle ||| noBorders Grid
+myLayouts = noBorders tiled ||| noBorders (Mirror tiled) ||| noBorders Full ||| noBorders Circle ||| noBorders Grid
   where
      tiled   = Tall nmaster delta ratio 
      nmaster = 1
@@ -71,15 +90,11 @@ mainLayouts = noBorders tiled ||| noBorders (Mirror tiled) ||| noBorders Full ||
 
 
 -------------------------------------------------------------------------------
-mainManageHook = composeAll
+myManageHook = composeAll
     [ className =? "Gimp"           --> doFloat
     , (className =? "Firefox" <&&> resource =? "Dialog") --> doFloat
-    , className =? "Cairo-dock"     --> doIgnore
     , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore 
     , className =? "Steam"          --> doFloat
     , className =? "steam"          --> doFullFloat 
-    , className =? "MPlayer"        --> doFloat
     , (isFullscreen --> doFullFloat) 
     ]
-
