@@ -69,6 +69,7 @@ main = do
     , logHook            = dynamicLogString def >>= xmonadPropLog
     , handleEventHook    = handleEventHook def <+> fullscreenEventHook 
     , terminal           = myTerminal
+    , borderWidth       = myBorderWidth
     , normalBorderColor  = myNormalBorderColor 
     , focusedBorderColor = myFocusedBorderColor
     }
