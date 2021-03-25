@@ -142,31 +142,6 @@ myStartupHook :: X ()
 myStartupHook = do
           spawnOnce "picom --experimental-backends &"
           spawnOnce "nitrogen --restore "
-<<<<<<< HEAD
-=======
-          
---------------------------------------------------------------------------------
-main = do
-  xmonad  $ ewmh desktopConfig
-    {
-      startupHook        = myStartupHook
-    , workspaces         = myWorkspaces
-    , modMask            = myModMask
-    , manageHook         = myManageHook <+> manageHook desktopConfig
-    , layoutHook         = smartBorders $ desktopLayoutModifiers $ myLayouts
-    , logHook            = dynamicLogString def >>= xmonadPropLog
-    , handleEventHook    = handleEventHook def <+> fullscreenEventHook 
-    , terminal           = myTerminal
-    , borderWidth       = myBorderWidth
-    , normalBorderColor  = myNormalBorderColor 
-    , focusedBorderColor = myFocusedBorderColor
-    }
-
-
-    `additionalKeys` 
-    [((0, xK_Print), spawn "gnome-screenshot -i")]
->>>>>>> 477a0bdfd9d89109603296fc7de10830b55fcd55
-
 
 
 -------------------------------------------------------------------------------
