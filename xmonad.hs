@@ -148,7 +148,7 @@ myStartupHook = do
 --  Layouts. A maioria eu não uso, mas gosto de manter.
 --
 
-myLayouts = noBorders tiled ||| noBorders (Mirror tiled) ||| noBorders Full ||| noBorders Circle ||| noBorders Grid
+myLayouts = tiled ||| (Mirror tiled) ||| Full ||| Circle ||| Grid
   where
      tiled   = Tall nmaster delta ratio 
      nmaster = 1
@@ -185,7 +185,8 @@ main = do
     , modMask            = myModMask
     , borderWidth        = myBorderWidth
     , manageHook         = myManageHook <+> manageHook desktopConfig
-    , layoutHook         = desktopLayoutModifiers $ spacingRaw True (Border sGap sGap sGap sGap) True (Border wGap wGap wGap wGap) True $ myLayouts
+    , layoutHook         = desktopLayoutModifiers $ spacingRaw True (Border sGap sGap sGap sGap) True (Border wGap wGap wGap wGap) True $ smartBorders $ myLayouts
+    --, layoutHook         = myLayouts
     , logHook            = dynamicLogString def >>= xmonadPropLog
     , handleEventHook    = handleEventHook def <+> fullscreenEventHook 
     , terminal           = myTerminal
